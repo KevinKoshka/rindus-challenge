@@ -23,23 +23,25 @@
             <div :class="`single-post ${activePost === post.id && 'active-post'}`" @click="clickHandler(post)" v-for="post in posts" :key="post.id">
                 <div class="post-title-container">
                     <o-button
+                        v-if="activePost === post.id"
                         class="post-edit"
                         icon-pack="fas"
                         variant="info"
                         icon-left="edit"
                         size="small"
                         outlined
-                        @click="editPostModal(post.id)"
+                        @click.stop.prevent="editPostModal(post.id)"
                     >Edit</o-button>
                     <h4 class="post-title">{{post.title}}</h4>
                     <o-button
+                        v-if="activePost === post.id"
                         class="post-delete"
                         icon-pack="fas"
                         variant="info"
                         icon-left="minus"
                         size="small"
                         outlined
-                        @click="deletePost(post.id)"
+                        @click.stop.prevent="deletePost(post.id)"
                     >Delete</o-button>
                 </div>
                 <p class="post-body">{{post.body}}</p>
@@ -85,7 +87,8 @@ export default {
             }
             return this.$store.getters.getPosts;
         },
-        containerClasses() {
+        containerClasses(){
+            console.log(this.containerStyle)
             return `posts-container ${this.containerStyle}`;
         }
     },
@@ -99,7 +102,12 @@ export default {
             return true;
         },
         deletePost(id) {
-            this.$store.dispatch('deletePost', { id: id });
+            this.$store.dispatch('deletePost', { postId: id }).then(() => {
+                if (this.$store.getters.getActivePost === id) {
+                    console.log(this.$store.getters.getActivePost)
+                    this.containerStyle = 'full-posts';
+                }
+            });
         },
         addPostModal() {
             this.isModalActive = true;

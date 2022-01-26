@@ -74,7 +74,7 @@
                 return true;
             },
             deleteComment(id) {
-                this.$store.dispatch('deleteComment', { id: id });
+                this.$store.dispatch('deleteComment', { commentId: id });
             },
             editCommentModal(id) {
                 this.isModalActive = true;

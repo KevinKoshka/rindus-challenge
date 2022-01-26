@@ -100,19 +100,23 @@ export default createStore({
                 });
         },
         async deletePost(context, { postId }) {
-            fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
+            const myPromise = postId > 100 ? Promise.resolve() : fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
                 method: 'DELETE'
-            }).then(() => {
+            });
+            myPromise.then(() => {
                 const posts = [...context.getters.getPosts];
                 posts.splice(postId - 1, 1);
                 context.commit('setPosts', posts);
-                console.log(context.getters.getPosts);
+                if (postId === context.getters.getActivePost) {
+                    context.commit('setActivePost', null)
+                }
             });
         },
         async deleteComment(context, { commentId }) {
-            fetch(`https://jsonplaceholder.typicode.com/comments/${commentId}`, {
+            const myPromise = commentId > 500 ? Promise.resolve() : fetch(`https://jsonplaceholder.typicode.com/comments/${commentId}`, {
                 method: 'DELETE'
-            }).then(() => {
+            });
+            myPromise.then(() => {
                 const comments = [...context.getters.getAllComments];
                 comments.splice(commentId - 1, 1);
                 context.commit('setComments', comments);
@@ -126,14 +130,14 @@ export default createStore({
                 email: email,
                 postId: postId
             };
-            fetch(`https://jsonplaceholder.typicode.com/comments/${id}`, {
+            const myPromise = postId > 500 ? Promise.resolve() : fetch(`https://jsonplaceholder.typicode.com/comments/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(theComment),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
                 },
-                })
-                .then((response) => response.json())
+            });
+            myPromise.then((response) => response.json())
                 .then(() => {
                     const allComments = [...context.getters.getAllComments];
                     allComments[id - 1] = theComment;
@@ -147,14 +151,14 @@ export default createStore({
                 id: id,
                 userId: userId
             };
-            fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+            const myPromise = id > 100 ? Promise.resolve() : fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(thePost),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8',
                 },
-                })
-                .then((response) => response.json())
+            });
+            myPromise.then((response) => response.json())
                 .then(() => {
                     const posts = [...context.getters.getPosts];
                     posts[id - 1] = thePost;

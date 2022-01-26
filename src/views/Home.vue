@@ -22,6 +22,7 @@ export default {
 <style>
     html {
         font-size: 13px;
+        overflow-y: hidden;
     }
     .divider {
         border-bottom: 1px solid gray;
